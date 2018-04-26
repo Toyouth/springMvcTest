@@ -1,23 +1,17 @@
 package ConcurrentStudy;
 
-/**
- * synchronized 学习
- *
- * @author yuhaiyang
- * @create 2018-04-21 10:36
- **/
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
-public class MySynchronized {
+public class Mylock {
     private int num;
-
-    public  synchronized  int  add(){
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    Lock lock = new ReentrantLock();
+    public int  add(){
         System.out.println("num》》》》="+this.num);
-        return this.num++;
+        lock.lock();
+        num++;
+        lock.unlock();
+        return num;
     }
 
     public int getNum() {
@@ -31,12 +25,12 @@ public class MySynchronized {
 
     public static void main(String[] args) throws InterruptedException {
         final MySynchronized num = new MySynchronized();
-        num.setNum(1);
+        num.setNum(0);
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i < 15; i++) {
+                for (int i = 0; i < 150; i++) {
                     num.add();
                 }
             }
